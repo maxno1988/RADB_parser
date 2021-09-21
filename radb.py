@@ -4,7 +4,7 @@ import re
 from ipwhois.net import Net
 from ipwhois.asn import IPASN
 from progress.bar import Bar
-
+#Builds a list of ASNs
 def as_set_stormwall_get():
     stream = os.popen("whois -h whois.radb.net AS-STORMWALL-SET | grep members: | awk '{print $2}'")
     result = stream.readlines()
