@@ -14,20 +14,19 @@ def as_set_stormwall_get():
     for i in result:
         bar.next()
         AS = i.split('\n')[0]
-        x = re.match("AS[0-9]+", AS)
+        x = re.match("AS[0-9]+$", AS)
         if x is None:
-            stream2 = os.popen("whois -h whois.radb.net " + AS + " | grep members: | awk '{print $2}'")
-            time.sleep(0.5)
+            stream2 = os.popen("whois -h whois.radb.net " + AS + " | grep members: | awk -F : '{print $2}'")
+            time.sleep(1)
             result2 = stream2.readlines()
             for s in result2:
                 AS = s.split('\n')[0]
-                AS_SET_LIST.append(AS)
+                AS_SET_LIST.append(AS.strip())
         else:
-            AS_LIST.append(AS)
+            AS_LIST.append(AS.strip())
     bar.finish()
     AS_LIST.extend(AS_SET_LIST)
     return AS_LIST
-
 
 
 def prefix_check(AS_LIST):
@@ -48,4 +47,15 @@ def prefix_check(AS_LIST):
 
 if "__name__ == __main__":
     AS_LIST = as_set_stormwall_get()
-    prefix_check(AS_LIST)
+    READY_AS_LIST = []
+    for AS in AS_LIST:
+        if ',' in AS:
+            LINE = AS.strip().split(',')
+            READY_AS_LIST.extend(LINE)
+        elif '#' in AS:
+            LINE = AS.strip().split('#')[0].strip()
+            READY_AS_LIST.append(LINE.strip())
+        else:
+            READY_AS_LIST.append(AS.strip())
+    prefix_check(READY_AS_LIST)
+
