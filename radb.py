@@ -39,11 +39,11 @@ def prefix_check(AS_LIST):
             except ValueError:
                 print("Prefix {} is not a correct format".format(i))
             AS = 'AS' + result['asn']
-            time.sleep(1)    
-            if AS in AS_LIST:
-                print("Match for {} and {} is found".format(i.strip(), AS))
-            else:
-                print("No match for {}".format(i))
+            time.sleep(0.5)    
+            if AS not in AS_LIST:
+                print("No Match for {} and {}".format(i.strip(), AS))
+            #else:
+            #    print("No match for {}".format(i))
 
 if "__name__ == __main__":
     AS_LIST = as_set_stormwall_get()
